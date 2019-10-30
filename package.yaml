@@ -13,17 +13,11 @@ description: Please see the README on GitHub at <https://github.com/ejconlon/hea
 
 dependencies:
 - base >= 4.12 && < 5
-# - bytestring
-# - containers
-# - free
-# - hashable
-# - lens
-# - mtl
-# - template-haskell
-# - text
-# - transformers
-# - unordered-containers
-# - vector
+- aeson
+- aeson-casing
+- containers
+- newtype-generics
+- text
 
 default-extensions:
   - ConstraintKinds
@@ -61,17 +55,6 @@ ghc-options:
 
 library:
   source-dirs: src
-
-executables:
-  heart-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - heart
 
 tests:
   heart-test:
