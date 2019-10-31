@@ -3,6 +3,7 @@ module Heart.App where
 import Colog.Actions (richMessageAction)
 import Colog.Message (Message)
 import Control.Monad.Reader (ReaderT (..))
+import Heart.Logging (HasSimpleLog (..))
 import Heart.Prelude
 import Heart.Stats (HasStore (..), Store, newStore)
 
@@ -13,10 +14,8 @@ data App = App
 
 $(makeLenses ''App)
 
-instance HasLog App Message IO where
-  getLogAction = view logActionL
-  setLogAction = set logActionL
-  logActionL = appLogAction
+instance HasSimpleLog App where
+  simpleLogL = appLogAction
 
 instance HasStore App where
   storeL = appStore
@@ -42,10 +41,8 @@ instance MonadUnliftIO (Main r) where
       e <- ask
       pure (UnliftIO (\m -> runReaderT (unMain m) e))
 
-instance HasLog (MainEnv r) Message IO where
-  getLogAction = view logActionL
-  setLogAction = set logActionL
-  logActionL = mainApp . appLogAction
+instance HasSimpleLog (MainEnv r) where
+  simpleLogL = mainApp . appLogAction
 
 instance HasStore (MainEnv r) where
   storeL = mainApp . appStore

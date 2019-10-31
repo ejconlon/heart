@@ -2,7 +2,7 @@ module Heart.Prelude
   ( module Prelude
   , FromJSON (..)
   , Generic
-  , HasLog (..)
+  , Exception (..)
   , Int64
   , Lens'
   , LogAction (..)
@@ -20,12 +20,6 @@ module Heart.Prelude
   , ToJSON (..)
   , UnliftIO (..)
   , WithLog
-  , log
-  , logDebug
-  , logInfo
-  , logWarning
-  , logError
-  , logException
   , makeLenses
   , makePrisms
   , over
@@ -34,10 +28,10 @@ module Heart.Prelude
   ) where
 
 import Colog.Core.Action (LogAction (..))
-import Colog.Core.Class (HasLog (..))
 import Colog.Core.Severity (Severity (..))
-import Colog.Message (Message, log, logDebug, logError, logException, logInfo, logWarning)
+import Colog.Message (Message)
 import Colog.Monad (WithLog)
+import Control.Exception (Exception (..))
 import Control.Lens (Lens', over, set, view)
 import Control.Lens.TH (makeLenses, makePrisms)
 import Control.Monad.Catch (MonadThrow (..))
