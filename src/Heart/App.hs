@@ -2,7 +2,7 @@ module Heart.App
   ( App (..)
   , appLogAction
   , appStore
-  , appData
+  , appEnv
   , newApp
   , AppM
   , runAppM
@@ -15,28 +15,30 @@ import Heart.Prelude
 import Heart.RIO (RIO, runRIO)
 import Heart.Stats (HasStore (..), Store, newStore)
 
-data App r = App
+data App env = App
   { _appLogAction :: !(LogAction IO Message)
   , _appStore     :: !Store
-  , _appData      :: r
+  , _appEnv       :: env
   }
 
 $(makeLenses ''App)
 
-instance HasSimpleLog (App r) where
+instance HasSimpleLog (App env) where
   simpleLogL = appLogAction
 
-instance HasStore (App r) where
+instance HasStore (App env) where
   storeL = appStore
 
-newApp :: MonadIO m => r -> m (App r)
-newApp r = do
+newApp :: MonadIO m => env -> m (App env)
+newApp env = do
   store <- newStore
-  pure (App richMessageAction store r)
+  pure (App richMessageAction store env)
 
-type AppM r a = RIO (App r) a
+type AppM env a = RIO (App env) a
 
-runAppM :: r -> AppM r a -> IO a
-runAppM r m = do
-  app <- newApp r
+type AppC env m = (HasSimpleLog env, HasStore env, MonadReader env m, MonadThrow m, MonadUnliftIO m, HasCallStack)
+
+runAppM :: env -> AppM env a -> IO a
+runAppM env m = do
+  app <- newApp env
   runRIO app m

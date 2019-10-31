@@ -3,6 +3,7 @@ module Heart.Prelude
   , FromJSON (..)
   , Generic
   , Getter
+  , HasCallStack
   , Exception (..)
   , Int64
   , Lens'
@@ -48,4 +49,5 @@ import Data.Proxy (Proxy (..))
 import Data.Sequence (Seq (..))
 import Data.Text (Text)
 import GHC.Generics (Generic, Rep)
+import GHC.Stack (HasCallStack)
 import Prelude hiding (log)
