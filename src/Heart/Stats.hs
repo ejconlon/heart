@@ -44,14 +44,14 @@ killServer server = liftIO (killThread (serverThreadId server))
 newCounter :: MonadIO m => m Counter
 newCounter = liftIO C.new
 
-registerCounter :: (MonadReader env m, HasStore env, MonadIO m) => Text -> Lens' env Counter -> m ()
+registerCounter :: (MonadReader env m, HasStore env, MonadIO m) => Text -> Getter env Counter -> m ()
 registerCounter name lenz = do
   store <- view storeL
   v <- view lenz
   liftIO (M.registerCounter name (C.read v) store)
 
-incCounter :: (MonadReader env m, MonadIO m) => Lens' env Counter -> m ()
+incCounter :: (MonadReader env m, MonadIO m) => Getter env Counter -> m ()
 incCounter lenz = view lenz >>= liftIO . C.inc
 
-readCounter :: (MonadReader env m, MonadIO m) => Lens' env Counter -> m Int64
+readCounter :: (MonadReader env m, MonadIO m) => Getter env Counter -> m Int64
 readCounter lenz = view lenz >>= liftIO . C.read

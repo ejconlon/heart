@@ -2,6 +2,7 @@ module Heart.Prelude
   ( module Prelude
   , FromJSON (..)
   , Generic
+  , Getter
   , Exception (..)
   , Int64
   , Lens'
@@ -15,11 +16,13 @@ module Heart.Prelude
   , Proxy (..)
   , Rep
   , Seq (..)
+  , Setter'
   , Severity (..)
   , Text
   , ToJSON (..)
   , UnliftIO (..)
   , WithLog
+  , coerced
   , makeLenses
   , makePrisms
   , over
@@ -32,7 +35,7 @@ import Colog.Core.Severity (Severity (..))
 import Colog.Message (Message)
 import Colog.Monad (WithLog)
 import Control.Exception (Exception (..))
-import Control.Lens (Lens', over, set, view)
+import Control.Lens (Getter, Lens', Setter', coerced, over, set, view)
 import Control.Lens.TH (makeLenses, makePrisms)
 import Control.Monad.Catch (MonadThrow (..))
 import Control.Monad.IO.Class (MonadIO (..))

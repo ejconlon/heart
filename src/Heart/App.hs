@@ -1,53 +1,42 @@
-module Heart.App where
+module Heart.App
+  ( App (..)
+  , appLogAction
+  , appStore
+  , appData
+  , newApp
+  , AppM
+  , runAppM
+  ) where
 
 import Colog.Actions (richMessageAction)
 import Colog.Message (Message)
-import Control.Monad.Reader (ReaderT (..))
 import Heart.Logging (HasSimpleLog (..))
 import Heart.Prelude
+import Heart.RIO (RIO, runRIO)
 import Heart.Stats (HasStore (..), Store, newStore)
 
-data App = App
+data App r = App
   { _appLogAction :: !(LogAction IO Message)
   , _appStore     :: !Store
+  , _appData      :: r
   }
 
 $(makeLenses ''App)
 
-instance HasSimpleLog App where
+instance HasSimpleLog (App r) where
   simpleLogL = appLogAction
 
-instance HasStore App where
+instance HasStore (App r) where
   storeL = appStore
 
-newApp :: IO App
-newApp = App richMessageAction <$> newStore
+newApp :: MonadIO m => r -> m (App r)
+newApp r = do
+  store <- newStore
+  pure (App richMessageAction store r)
 
-data MainEnv (r :: *) = MainEnv
-  { _mainApp :: App
-  , _mainData :: r
-  }
+type AppM r a = RIO (App r) a
 
-$(makeLenses ''MainEnv)
-
-newMainEnv :: r -> IO (MainEnv r)
-newMainEnv r = flip MainEnv r <$> newApp
-
-newtype Main r a = Main { unMain :: ReaderT (MainEnv r) IO a }
-  deriving (Functor, Applicative, Monad, MonadReader (MainEnv r), MonadIO, MonadThrow)
-
-instance MonadUnliftIO (Main r) where
-    askUnliftIO = Main $ do
-      e <- ask
-      pure (UnliftIO (\m -> runReaderT (unMain m) e))
-
-instance HasSimpleLog (MainEnv r) where
-  simpleLogL = mainApp . appLogAction
-
-instance HasStore (MainEnv r) where
-  storeL = mainApp . appStore
-
-runMain :: Main r a -> r -> IO a
-runMain m r = do
-  e <- newMainEnv r
-  runReaderT (unMain m) e
+runAppM :: r -> AppM r a -> IO a
+runAppM r m = do
+  app <- newApp r
+  runRIO app m
