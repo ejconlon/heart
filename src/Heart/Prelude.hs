@@ -7,7 +7,6 @@ module Heart.Prelude
   , Lens'
   , LogAction (..)
   , Message
-  , MonadCatch (..)
   , MonadIO (..)
   , MonadReader (..)
   , MonadThrow (..)
@@ -41,7 +40,7 @@ import Colog.Message (Message, log, logDebug, logError, logException, logInfo, l
 import Colog.Monad (WithLog)
 import Control.Lens (Lens', over, set, view)
 import Control.Lens.TH (makeLenses, makePrisms)
-import Control.Monad.Catch (MonadCatch (..), MonadThrow (..))
+import Control.Monad.Catch (MonadThrow (..))
 import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.IO.Unlift (MonadUnliftIO (..), UnliftIO (..))
 import Control.Monad.Reader (MonadReader (..))

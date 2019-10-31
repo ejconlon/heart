@@ -6,50 +6,51 @@ import Control.Monad.Reader (ReaderT (..))
 import Heart.Prelude
 import Heart.Stats (HasStore (..), Store, newStore)
 
-data App (m :: * -> *) = App
-  { _appLogAction :: !(LogAction m Message)
+data App = App
+  { _appLogAction :: !(LogAction IO Message)
   , _appStore     :: !Store
   }
 
 $(makeLenses ''App)
 
-instance HasLog (App m) Message m where
+instance HasLog App Message IO where
   getLogAction = view logActionL
   setLogAction = set logActionL
   logActionL = appLogAction
 
-instance HasStore (App m) where
+instance HasStore App where
   storeL = appStore
 
-newApp :: MonadIO m => m (App m)
+newApp :: IO App
 newApp = App richMessageAction <$> newStore
 
-data MainEnv (r :: *) (m :: * -> *) = MainEnv
-  { _mainApp :: App m
+data MainEnv (r :: *) = MainEnv
+  { _mainApp :: App
   , _mainData :: r
   }
 
 $(makeLenses ''MainEnv)
 
-newMainEnv :: MonadIO m => r -> m (MainEnv r m)
+newMainEnv :: r -> IO (MainEnv r)
 newMainEnv r = flip MainEnv r <$> newApp
 
-newtype Main r m a = Main { unMain :: ReaderT (MainEnv r m) m a }
-  deriving (Functor, Applicative, Monad, MonadReader (MainEnv r m), MonadIO, MonadThrow, MonadCatch)
+newtype Main r a = Main { unMain :: ReaderT (MainEnv r) IO a }
+  deriving (Functor, Applicative, Monad, MonadReader (MainEnv r), MonadIO, MonadThrow)
 
-instance MonadUnliftIO m => MonadUnliftIO (Main r m) where
-    askUnliftIO = Main (fmap (\(UnliftIO run) -> UnliftIO (run . unMain)) askUnliftIO)
-    withRunInIO go = Main (withRunInIO (\k -> go (k . unMain)))
+instance MonadUnliftIO (Main r) where
+    askUnliftIO = Main $ do
+      e <- ask
+      pure (UnliftIO (\m -> runReaderT (unMain m) e))
 
-instance HasLog (MainEnv r m) Message m where
+instance HasLog (MainEnv r) Message IO where
   getLogAction = view logActionL
   setLogAction = set logActionL
   logActionL = mainApp . appLogAction
 
-instance HasStore (MainEnv r m) where
+instance HasStore (MainEnv r) where
   storeL = mainApp . appStore
 
-runMain :: MonadIO m => Main r m a -> r -> m a
+runMain :: Main r a -> r -> IO a
 runMain m r = do
   e <- newMainEnv r
   runReaderT (unMain m) e

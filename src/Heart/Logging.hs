@@ -4,4 +4,4 @@ module Heart.Logging
 
 import Heart.Prelude
 
-type WithMessageLog env m = WithLog env Message m
+type WithMessageLog env = WithLog env Message IO
