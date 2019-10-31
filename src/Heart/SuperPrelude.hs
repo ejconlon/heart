@@ -1,7 +1,11 @@
 module Heart.SuperPrelude
-  ( module Heart.Prelude
-  , module Heart.Aeson
+  ( module Heart.Aeson
+  , module Heart.App
+  , module Heart.Prelude
+  , module Heart.Stats
   ) where
 
-import Heart.Prelude
 import Heart.Aeson
+import Heart.App
+import Heart.Prelude
+import Heart.Stats

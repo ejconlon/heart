@@ -16,7 +16,13 @@ dependencies:
 - aeson
 - aeson-casing
 - containers
+- co-log
+- co-log-core
+- ekg
+- ekg-core
+- ekg-statsd
 - lens
+- mtl
 - newtype-generics
 - text
 

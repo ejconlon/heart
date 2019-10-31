@@ -1,5 +1,5 @@
-{-# LANGUAGE ScopedTypeVariables    #-}
-{-# LANGUAGE UndecidableInstances   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Heart.Aeson (
       AesonRecord (..)
@@ -11,8 +11,8 @@ module Heart.Aeson (
 
 import Control.Newtype.Generics (Newtype, O, pack, unpack)
 import Data.Aeson
-import Data.Aeson.Casing        (aesonPrefix, snakeCase)
-import qualified                Data.Text as Text
+import Data.Aeson.Casing (aesonPrefix, snakeCase)
+import qualified Data.Text as Text
 import Heart.Prelude
 
 -- Options
