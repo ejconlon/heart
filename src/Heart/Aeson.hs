@@ -11,20 +11,18 @@ module Heart.Aeson (
 
 import Control.Newtype.Generics (Newtype, O, pack, unpack)
 import Data.Aeson
-import Data.Aeson.Casing        (snakeCase)
+import Data.Aeson.Casing        (aesonPrefix, snakeCase)
+import qualified                Data.Text as Text
 import Heart.Prelude
 
 -- Options
 
 recordOptions :: Options
-recordOptions = defaultOptions
-    { omitNothingFields = True
-    , fieldLabelModifier = snakeCase
-    }
+recordOptions = (aesonPrefix snakeCase) { omitNothingFields = True }
 
-tagOptions :: String -> Options
+tagOptions :: Text -> Options
 tagOptions prefix =
-    let prefixLen = length prefix
+    let prefixLen = Text.length prefix
     in defaultOptions
         { allNullaryToStringTag = True
         , constructorTagModifier = snakeCase . drop prefixLen
@@ -41,7 +39,7 @@ class HasJSONOptions a where
     getJSONOptions :: Proxy a -> Options
 
 class HasTagPrefix a where
-    getTagPrefix :: Proxy a -> String
+    getTagPrefix :: Proxy a -> Text
 
 -- Wrappers
 
