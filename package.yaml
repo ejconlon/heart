@@ -16,6 +16,7 @@ dependencies:
 - aeson
 - aeson-casing
 - containers
+- lens
 - newtype-generics
 - text
 
