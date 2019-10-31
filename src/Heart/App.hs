@@ -5,6 +5,7 @@ module Heart.App
   , appEnv
   , newApp
   , AppM
+  , AppC
   , runAppM
   ) where
 
