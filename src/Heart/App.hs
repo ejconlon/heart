@@ -24,3 +24,5 @@ instance HasStore (App m) where
 
 newApp :: MonadIO m => m (App m)
 newApp = App richMessageAction <$> newStore
+
+type WithMessageLog env m = WithLog env Message m

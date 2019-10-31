@@ -9,13 +9,24 @@ module Heart.Prelude
   , Proxy (..)
   , Rep
   , Seq (..)
+  , Severity (..)
   , Text
   , ToJSON (..)
+  , WithLog
+  , log
+  , logDebug
+  , logInfo
+  , logWarning
+  , logError
+  , logException
   , makeLenses
   , makePrisms
   , view
   ) where
 
+import Colog.Core.Severity (Severity (..))
+import Colog.Message (log, logDebug, logError, logException, logInfo, logWarning)
+import Colog.Monad (WithLog)
 import Control.Lens (Lens', view)
 import Control.Lens.TH (makeLenses, makePrisms)
 import Control.Monad.IO.Class (MonadIO (..))
@@ -26,4 +37,4 @@ import Data.Proxy (Proxy (..))
 import Data.Sequence (Seq (..))
 import Data.Text (Text)
 import GHC.Generics (Generic, Rep)
-import Prelude
+import Prelude hiding (log)
