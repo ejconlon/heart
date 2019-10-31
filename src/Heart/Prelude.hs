@@ -1,8 +1,9 @@
 module Heart.Prelude
   ( module Prelude
-  , Generic (..)
   , FromJSON (..)
+  , Generic
   , Proxy (..)
+  , Rep
   , Seq (..)
   , Text
   , ToJSON (..)
@@ -15,5 +16,5 @@ import Data.Aeson (ToJSON (..), FromJSON (..))
 import Data.Proxy (Proxy (..))
 import Data.Sequence (Seq (..))
 import Data.Text (Text)
-import GHC.Generics (Generic (..))
+import GHC.Generics (Generic, Rep)
 import Control.Lens.TH (makeLenses, makePrisms)
