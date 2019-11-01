@@ -36,6 +36,7 @@ default-extensions:
   - DeriveGeneric
   - DeriveTraversable
   - DerivingStrategies
+  - DerivingVia
   - FlexibleContexts
   - FlexibleInstances
   - FunctionalDependencies

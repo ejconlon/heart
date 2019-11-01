@@ -1,53 +1,46 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Heart.App
   ( App (..)
+  , AppWrapper (..)
   , appLogAction
   , appStore
-  , appEnv
+  , HasApp (..)
   , newApp
-  , AppM
-  , AppC
-  , embedAppM
-  , withAppM
-  , runAppM
   ) where
 
 import Colog.Actions (richMessageAction)
 import Colog.Message (Message)
 import Heart.Logging (HasSimpleLog (..))
 import Heart.Prelude
-import Heart.RIO (RIO, runRIO, withRIO)
 import Heart.Stats (HasStore (..), Store, newStore)
 
-data App env = App
+data App = App
   { _appLogAction :: !(LogAction IO Message)
   , _appStore     :: !Store
-  , _appEnv       :: env
   }
 
 $(makeLenses ''App)
 
-instance HasSimpleLog (App env) where
+class HasApp env where
+  appL :: Lens' env App
+
+instance HasApp App where
+  appL = simple
+
+instance HasSimpleLog App where
   simpleLogL = appLogAction
 
-instance HasStore (App env) where
+instance HasStore App where
   storeL = appStore
 
-newApp :: MonadIO m => env -> m (App env)
-newApp env = do
-  store <- newStore
-  pure (App richMessageAction store env)
+newApp :: MonadIO m => m App
+newApp = App richMessageAction <$> newStore
 
-type AppM env a = RIO (App env) a
+newtype AppWrapper env = AppWrapper env
 
-type AppC env m = (MonadUnliftIO m, MonadThrow m, MonadReader env m, HasSimpleLog env, HasStore env, HasCallStack)
+instance HasApp (AppWrapper env) => HasSimpleLog (AppWrapper env) where
+  simpleLogL = appL . simpleLogL
 
-embedAppM :: RIO env a -> AppM env a
-embedAppM = withRIO (view appEnv)
-
-withAppM :: (env -> env') -> AppM env' a -> AppM env a
-withAppM f = withRIO (over appEnv f)
-
-runAppM :: env -> AppM env a -> IO a
-runAppM env m = do
-  app <- newApp env
-  runRIO app m
+instance HasApp (AppWrapper env) => HasStore (AppWrapper env) where
+  storeL = appL . storeL
