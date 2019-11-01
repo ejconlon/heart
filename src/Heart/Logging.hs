@@ -15,10 +15,15 @@ import qualified Data.Text as Text
 import GHC.Stack (HasCallStack, callStack, withFrozenCallStack)
 import Heart.Prelude
 
-class HasSimpleLog (env :: *) where
-  simpleLogL :: Lens' env (LogAction IO Message)
+type SimpleLogAction = LogAction IO Message
 
-type WithSimpleLog (env :: *) (m :: * -> *) = (MonadIO m, MonadReader env m, HasSimpleLog env, HasCallStack)
+class HasSimpleLog env where
+  simpleLogL :: Lens' env SimpleLogAction
+
+instance HasSimpleLog SimpleLogAction where
+  simpleLogL = simple
+
+type WithSimpleLog env m = (MonadIO m, MonadReader env m, HasSimpleLog env, HasCallStack)
 
 logMsg :: WithSimpleLog env m => Message -> m ()
 logMsg msg = do

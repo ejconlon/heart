@@ -25,6 +25,9 @@ import System.Remote.Monitoring (Server, forkServerWith, serverThreadId)
 class HasStore env where
   storeL :: Lens' env Store
 
+instance HasStore Store where
+  storeL = simple
+
 newStore :: MonadIO m => m Store
 newStore = liftIO M.newStore
 

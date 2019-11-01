@@ -28,6 +28,7 @@ module Heart.Prelude
   , makePrisms
   , over
   , set
+  , simple
   , view
   ) where
 
@@ -36,7 +37,7 @@ import Colog.Core.Severity (Severity (..))
 import Colog.Message (Message)
 import Colog.Monad (WithLog)
 import Control.Exception (Exception (..))
-import Control.Lens (Getter, Lens', Setter', coerced, over, set, view)
+import Control.Lens (Getter, Lens', Setter', coerced, over, set, simple, view)
 import Control.Lens.TH (makeLenses, makePrisms)
 import Control.Monad.Catch (MonadThrow (..))
 import Control.Monad.IO.Class (MonadIO (..))

@@ -5,7 +5,8 @@ module Heart.App
   , appEnv
   , newApp
   , AppM
-  , AppC
+  , embedAppM
+  , withAppM
   , runAppM
   ) where
 
@@ -13,7 +14,7 @@ import Colog.Actions (richMessageAction)
 import Colog.Message (Message)
 import Heart.Logging (HasSimpleLog (..))
 import Heart.Prelude
-import Heart.RIO (RIO, runRIO)
+import Heart.RIO (RIO, runRIO, withRIO)
 import Heart.Stats (HasStore (..), Store, newStore)
 
 data App env = App
@@ -37,7 +38,11 @@ newApp env = do
 
 type AppM env a = RIO (App env) a
 
-type AppC env m = (HasSimpleLog env, HasStore env, MonadReader env m, MonadThrow m, MonadUnliftIO m, HasCallStack)
+embedAppM :: RIO env a -> AppM env a
+embedAppM = withRIO (view appEnv)
+
+withAppM :: (env -> env') -> AppM env' a -> AppM env a
+withAppM f = withRIO (over appEnv f)
 
 runAppM :: env -> AppM env a -> IO a
 runAppM env m = do
