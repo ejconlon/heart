@@ -22,7 +22,6 @@ module Heart.Prelude
   , Text
   , ToJSON (..)
   , UnliftIO (..)
-  , WithLog
   , coerced
   , makeLenses
   , makePrisms
@@ -35,7 +34,6 @@ module Heart.Prelude
 import Colog.Core.Action (LogAction (..))
 import Colog.Core.Severity (Severity (..))
 import Colog.Message (Message)
-import Colog.Monad (WithLog)
 import Control.Exception (Exception (..))
 import Control.Lens (Getter, Lens', Setter', coerced, over, set, simple, view)
 import Control.Lens.TH (makeLenses, makePrisms)
