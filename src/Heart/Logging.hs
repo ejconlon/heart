@@ -1,5 +1,6 @@
 module Heart.Logging
-  ( HasSimpleLog (..)
+  ( SimpleLogAction
+  , HasSimpleLog (..)
   , WithSimpleLog
   , logMsg
   , log
