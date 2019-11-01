@@ -5,6 +5,7 @@ module Heart.App
   , appEnv
   , newApp
   , AppM
+  , AppC
   , embedAppM
   , withAppM
   , runAppM
@@ -37,6 +38,8 @@ newApp env = do
   pure (App richMessageAction store env)
 
 type AppM env a = RIO (App env) a
+
+type AppC env m = (MonadUnliftIO m, MonadThrow m, MonadReader env m, HasSimpleLog env, HasStore env, HasCallStack)
 
 embedAppM :: RIO env a -> AppM env a
 embedAppM = withRIO (view appEnv)
