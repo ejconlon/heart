@@ -9,6 +9,7 @@ module Heart.Prelude
   , Exception (..)
   , Hashable
   , HashMap
+  , HashSet
   , Int64
   , IsString
   , Lens'
@@ -25,6 +26,7 @@ module Heart.Prelude
   , Proxy (..)
   , Rep
   , Seq (..)
+  , Set
   , Setter'
   , Severity (..)
   , Text
@@ -61,10 +63,12 @@ import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON (..), ToJSONKey)
 import Data.Foldable (asum, for_)
 import Data.Hashable (Hashable)
 import Data.HashMap.Strict (HashMap)
+import Data.HashSet (HashSet)
 import Data.Int (Int64)
 import Data.Map.Strict (Map)
 import Data.Proxy (Proxy (..))
 import Data.Sequence (Seq (..))
+import Data.Set (Set)
 import Data.String (IsString)
 import Data.Text (Text)
 import Data.Traversable (for)
