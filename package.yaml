@@ -22,11 +22,16 @@ dependencies:
 - ekg-core
 - ekg-statsd
 - exceptions
+- filepath
+- hashable
 - lens
+- list-t
 - mtl
 - newtype-generics
 - text
+- unliftio
 - unliftio-core
+- unordered-containers
 
 default-extensions:
   - ConstraintKinds
