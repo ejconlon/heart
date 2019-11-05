@@ -9,7 +9,7 @@ import Control.Monad.Reader (ReaderT (..))
 import Heart.Prelude
 
 newtype RIO env a = RIO { unRIO :: ReaderT env IO a }
-  deriving (Functor, Applicative, Monad, MonadReader env, MonadIO, MonadThrow)
+  deriving (Functor, Applicative, Monad, MonadReader env, MonadIO, MonadThrow, MonadFail)
 
 instance MonadUnliftIO (RIO env) where
   askUnliftIO = RIO (ReaderT (\r -> withUnliftIO (\u -> return (UnliftIO (unliftIO u . flip runReaderT r . unRIO)))))
