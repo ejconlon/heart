@@ -1,6 +1,7 @@
 module Heart.SuperPrelude
   ( module Heart.Aeson
   , module Heart.App
+  , module Heart.Builder
   , module Heart.Directory
   , module Heart.ListT
   , module Heart.Logging
@@ -11,6 +12,7 @@ module Heart.SuperPrelude
 
 import Heart.Aeson
 import Heart.App
+import Heart.Builder
 import Heart.Directory
 import Heart.ListT
 import Heart.Logging
