@@ -1,5 +1,6 @@
 module Heart.SuperPrelude
   ( module Heart.Aeson
+  , module Heart.Alloc
   , module Heart.App
   , module Heart.Builder
   , module Heart.Directory
@@ -11,6 +12,7 @@ module Heart.SuperPrelude
   ) where
 
 import Heart.Aeson
+import Heart.Alloc
 import Heart.App
 import Heart.Builder
 import Heart.Directory
