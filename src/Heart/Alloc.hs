@@ -16,6 +16,9 @@ data Alloc e = forall x. Alloc
   , _allocExtract :: x -> e
   }
 
+instance Functor Alloc where
+  fmap f (Alloc step ref extract) = Alloc step ref (f . extract)
+
 newAlloc :: MonadIO m => (e -> e) -> e -> m (Alloc e)
 newAlloc f e = fmap (\r -> Alloc f r id) (newIORef e)
 
