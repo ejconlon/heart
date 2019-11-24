@@ -4,9 +4,9 @@ module Heart.MultiMap
   , invertHashMapWith
   ) where
 
-import Heart.Prelude
 import qualified Data.HashMap.Strict as HM
 import qualified Data.HashSet as HS
+import Heart.Prelude
 
 type HashMultiMap k v = HashMap k (HashSet v)
 
