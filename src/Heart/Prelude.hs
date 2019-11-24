@@ -7,7 +7,7 @@ module Heart.Prelude
   , Getter
   , HasCallStack
   , Exception (..)
-  , Hashable
+  , Hashable (..)
   , HashMap
   , HashSet
   , Int64
@@ -37,6 +37,8 @@ module Heart.Prelude
   , UnliftIO (..)
   , asum
   , coerced
+  , foldl'
+  , foldM
   , for
   , for_
   , makeLenses
@@ -44,7 +46,9 @@ module Heart.Prelude
   , over
   , set
   , simple
+  , unless
   , view
+  , when
   ) where
 
 import Colog.Core.Action (LogAction (..))
@@ -54,6 +58,7 @@ import Control.Applicative (Alternative (..))
 import Control.Exception (Exception (..))
 import Control.Lens (Getter, Lens', Setter', coerced, over, set, simple, view)
 import Control.Lens.TH (makeLenses, makePrisms)
+import Control.Monad (foldM, unless, when)
 import Control.Monad.Catch (MonadThrow (..))
 import Control.Monad.Fail (MonadFail (..))
 import Control.Monad.IO.Class (MonadIO (..))
@@ -63,10 +68,11 @@ import Control.Monad.Trans (MonadTrans (..))
 import Control.Newtype.Generics (Newtype)
 import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON (..), ToJSONKey)
 import Data.Foldable (asum, for_)
-import Data.Hashable (Hashable)
+import Data.Hashable (Hashable (..))
 import Data.HashMap.Strict (HashMap)
 import Data.HashSet (HashSet)
 import Data.Int (Int64)
+import Data.List (foldl')
 import Data.Map.Strict (Map)
 import Data.Proxy (Proxy (..))
 import Data.Sequence (Seq (..))

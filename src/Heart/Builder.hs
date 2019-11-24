@@ -31,12 +31,17 @@ module Heart.Builder
   , newHashSetBuilder
   , runHashSetBuilder
   , evalHashSetBuilder
+  , HashMultiMapBuilder
+  , newHashMultiMapBuilder
+  , runHashMultiMapBuilder
+  , evalHashMultiMapBuilder
   ) where
 
 import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
+import Heart.MultiMap
 import Heart.Prelude
 import qualified ListT
 import UnliftIO.IORef
@@ -139,3 +144,14 @@ runHashSetBuilder h = newHashSetBuilder >>= flip rawRunBuilder h
 
 evalHashSetBuilder :: (MonadIO m, Eq k, Hashable k) => (HashSetBuilder k -> m ()) -> m (HashSet k)
 evalHashSetBuilder h = fmap fst (runHashSetBuilder h)
+
+type HashMultiMapBuilder k v = Builder (k, v) (HashMultiMap k v)
+
+newHashMultiMapBuilder :: (MonadIO m, Eq k, Hashable k, Eq v, Hashable v) => m (HashMultiMapBuilder k v)
+newHashMultiMapBuilder = newBuilder (\m (k, v) -> insertHashMultiMap k v m) HashMap.empty
+
+runHashMultiMapBuilder :: (MonadIO m, Eq k, Hashable k, Eq v, Hashable v) => (HashMultiMapBuilder k v -> m c) -> m (HashMultiMap k v, c)
+runHashMultiMapBuilder h = newHashMultiMapBuilder >>= flip rawRunBuilder h
+
+evalHashMultiMapBuilder :: (MonadIO m, Eq k, Hashable k, Eq v, Hashable v) => (HashMultiMapBuilder k v -> m ()) -> m (HashMultiMap k v)
+evalHashMultiMapBuilder h = fmap fst (runHashMultiMapBuilder h)
