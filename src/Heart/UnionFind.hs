@@ -17,43 +17,41 @@ import Heart.MultiMap
 import Heart.Prelude
 import UnliftIO.IORef (IORef, newIORef, readIORef, writeIORef)
 
--- The s type param a phantom to allow the caller to ensure that partitions
--- of different "things" can't be mixed up.
-newtype Partition s = Partition { unPartition :: Int } deriving (Eq, Ord, Enum, Show, Hashable)
+newtype Partition = Partition { unPartition :: Int } deriving (Eq, Ord, Enum, Show, Hashable)
 
 -- From Content/Term encoding simplified from
 --- https://github.com/ekmett/guanxi/blob/master/src/Equality.hs
-data Content s
+data Content
   = Root !Int
-  | Child !(Term s)
+  | Child !Term
 
-data Term s = Term
-  { _termPartition :: !(Partition s)
-  , _termParent :: !(IORef (Content s))
+data Term = Term
+  { _termPartition :: !Partition
+  , _termParent :: !(IORef Content)
   }
 
-instance Eq (Term s) where
+instance Eq Term where
   (==) = (==) `on` _termPartition
 
-instance Ord (Term s) where
+instance Ord Term where
   (<=) = (<=) `on` _termPartition
 
-instance Hashable (Term s) where
+instance Hashable Term where
   hash = hash . _termPartition
   hashWithSalt d = hashWithSalt d . _termPartition
 
-newtype PartitionAlloc s = PartitionAlloc { unPartitionAlloc :: Alloc (Partition s) }
+newtype PartitionAlloc = PartitionAlloc { unPartitionAlloc :: Alloc Partition }
 
-newPartitionAlloc :: MonadIO m => m (PartitionAlloc s)
+newPartitionAlloc :: MonadIO m => m PartitionAlloc
 newPartitionAlloc = fmap PartitionAlloc newEnumAlloc
 
-newTerm :: MonadIO m => PartitionAlloc s -> m (Term s)
+newTerm :: MonadIO m => PartitionAlloc -> m Term
 newTerm (PartitionAlloc alloc) = do
   p <- incAlloc alloc
   r <- newIORef (Root 0)
   pure (Term p r)
 
-findTermEx :: MonadIO m => Term s -> m (Int, Term s)
+findTermEx :: MonadIO m => Term -> m (Int, Term)
 findTermEx t@(Term _ r) = do
   y <- readIORef r
   case y of
@@ -63,10 +61,10 @@ findTermEx t@(Term _ r) = do
       let (_, q) = z
       z <$ writeIORef r (Child q)
 
-findTerm :: MonadIO m => Term s -> m (Term s)
+findTerm :: MonadIO m => Term -> m Term
 findTerm = fmap snd . findTermEx
 
-unionTerm :: MonadIO m => Term s -> Term s -> m ()
+unionTerm :: MonadIO m => Term -> Term -> m ()
 unionTerm m n = do
   (mrank, mroot) <- findTermEx m
   (nrank, nroot) <- findTermEx n
@@ -83,8 +81,8 @@ unionTerm m n = do
       writeIORef mref (Child nroot)
       writeIORef nref (Root (nrank + 1))
 
-decideEqTerm :: MonadIO m => Term s -> Term s -> m Bool
+decideEqTerm :: MonadIO m => Term -> Term -> m Bool
 decideEqTerm m n = (==) <$> findTerm m <*> findTerm n
 
-splitClasses :: (Eq k, Hashable k, MonadIO m) => HashMap k (Term s) -> m (HashMultiMap (Term s) k)
+splitClasses :: (Eq k, Hashable k, MonadIO m) => HashMap k Term -> m (HashMultiMap Term k)
 splitClasses = invertHashMapWith findTerm
