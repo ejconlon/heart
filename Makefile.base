@@ -27,7 +27,7 @@ deps:
 
 .PHONY: watch
 watch:
-	stack exec -- ghcid
+	stack exec -- ghcid --lint=`stack exec -- which hlint`
 
 .PHONY: format
 format:
