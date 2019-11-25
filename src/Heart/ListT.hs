@@ -25,3 +25,11 @@ seqListT = go Empty where
     case m of
       Just (s, vs') -> go (ss :|> s) vs'
       Nothing -> pure ss
+
+yieldListT :: Monad m => m (Maybe x) -> ListT m x
+yieldListT act = go where
+  go = ListT $ do
+    mx <- act
+    case mx of
+      Nothing -> pure Nothing
+      Just x -> pure (Just (x, go))

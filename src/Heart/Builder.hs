@@ -51,9 +51,9 @@ import qualified ListT
 import UnliftIO.IORef
 
 data Builder a b = forall x. Builder
-  { _builderStep :: x -> a -> x
-  , _builderRef :: IORef x
-  , _builderExtract :: x -> b
+  { _builderStep :: !(x -> a -> x)
+  , _builderRef :: !(IORef x)
+  , _builderExtract :: !(x -> b)
   }
 
 instance Functor (Builder a) where

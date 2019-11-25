@@ -11,9 +11,9 @@ import Heart.Prelude
 import UnliftIO.IORef
 
 data Alloc e = forall x. Alloc
-  { _allocStep :: x -> x
-  , _allocRef:: IORef x
-  , _allocExtract :: x -> e
+  { _allocStep :: !(x -> x)
+  , _allocRef:: !(IORef x)
+  , _allocExtract :: !(x -> e)
   }
 
 instance Functor Alloc where
