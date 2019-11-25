@@ -3,17 +3,10 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages:
-- completed:
-    hackage: hie-bios-0.2.1@sha256:5f98a3516ce65e0a3ffd88bf6fb416b04cc084371d0fbf0e1762780de1d652ce,3219
-    pantry-tree:
-      size: 1308
-      sha256: 72295b5cbc8a09522c38fc748de4a02256bd394868699e1b9fd4fbba61d854aa
-  original:
-    hackage: hie-bios-0.2.1@sha256:5f98a3516ce65e0a3ffd88bf6fb416b04cc084371d0fbf0e1762780de1d652ce,3219
+packages: []
 snapshots:
 - completed:
-    size: 545658
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/14/12.yaml
-    sha256: 26b807457213126d26b595439d705dc824dbb7618b0de6b900adc2bf6a059406
-  original: lts-14.12
+    size: 524804
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/14/16.yaml
+    sha256: 4d1519a4372d051d47a5eae2241cf3fb54e113d7475f89707ddb6ec06add2888
+  original: lts-14.16

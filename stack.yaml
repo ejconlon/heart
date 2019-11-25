@@ -1,7 +1,4 @@
-resolver: lts-14.12
+resolver: lts-14.16
 
 packages:
 - .
-
-extra-deps:
-- hie-bios-0.2.1@sha256:5f98a3516ce65e0a3ffd88bf6fb416b04cc084371d0fbf0e1762780de1d652ce,3219
