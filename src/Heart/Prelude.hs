@@ -1,6 +1,7 @@
 module Heart.Prelude
   ( module Prelude
   , Alternative (..)
+  , Coercible
   , FromJSON (..)
   , FromJSONKey
   , Generic
@@ -37,11 +38,13 @@ module Heart.Prelude
   , Typeable
   , UnliftIO (..)
   , asum
+  , coerce
   , coerced
   , foldl'
   , foldM
   , for
   , for_
+  , forM_
   , makeLenses
   , makePrisms
   , over
@@ -69,7 +72,8 @@ import Control.Monad.Reader (MonadReader (..))
 import Control.Monad.Trans (MonadTrans (..))
 import Control.Newtype.Generics (Newtype)
 import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON (..), ToJSONKey)
-import Data.Foldable (asum, for_)
+import Data.Coerce (Coercible, coerce)
+import Data.Foldable (asum, forM_, for_)
 import Data.Hashable (Hashable (..))
 import Data.HashMap.Strict (HashMap)
 import Data.HashSet (HashSet)
