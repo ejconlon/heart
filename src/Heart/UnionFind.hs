@@ -3,7 +3,7 @@ module Heart.UnionFind
   , Term
   , newPartitionAlloc
   , newTerm
-  , findTermEx
+  , findTermRank
   , findTerm
   , unionTerm
   , decideEqTerm
@@ -51,23 +51,23 @@ newTerm (PartitionAlloc alloc) = do
   r <- newIORef (Root 0)
   pure (Term p r)
 
-findTermEx :: MonadIO m => Term -> m (Int, Term)
-findTermEx t@(Term _ r) = do
+findTermRank :: MonadIO m => Term -> m (Int, Term)
+findTermRank t@(Term _ r) = do
   y <- readIORef r
   case y of
     Root i -> pure (i, t)
     Child s -> do
-      z <- findTermEx s
-      let (_, q) = z
-      z <$ writeIORef r (Child q)
+      z@(_, q) <- findTermRank s
+      writeIORef r (Child q)
+      pure z
 
 findTerm :: MonadIO m => Term -> m Term
-findTerm = fmap snd . findTermEx
+findTerm = fmap snd . findTermRank
 
 unionTerm :: MonadIO m => Term -> Term -> m ()
 unionTerm m n = do
-  (mrank, mroot) <- findTermEx m
-  (nrank, nroot) <- findTermEx n
+  (mrank, mroot) <- findTermRank m
+  (nrank, nroot) <- findTermRank n
   let mref = _termParent mroot
       nref = _termParent nroot
   case compare mrank nrank of
