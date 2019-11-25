@@ -1,6 +1,5 @@
 module Heart.UnionFind
-  ( Partition
-  , PartitionAlloc
+  ( PartitionAlloc
   , Term
   , newPartitionAlloc
   , newTerm
@@ -8,7 +7,8 @@ module Heart.UnionFind
   , findTerm
   , unionTerm
   , decideEqTerm
-  , splitClasses
+  , hashSplitClasses
+  , ordSplitClasses
   ) where
 
 import Data.Function (on)
@@ -84,5 +84,8 @@ unionTerm m n = do
 decideEqTerm :: MonadIO m => Term -> Term -> m Bool
 decideEqTerm m n = (==) <$> findTerm m <*> findTerm n
 
-splitClasses :: (Eq k, Hashable k, MonadIO m) => HashMap k Term -> m (HashMultiMap Term k)
-splitClasses = invertHashMapWith findTerm
+hashSplitClasses :: (Eq k, Hashable k, MonadIO m) => HashMap k Term -> m (HashMultiMap Term k)
+hashSplitClasses = invertHashMapWith findTerm
+
+ordSplitClasses :: (Ord k, MonadIO m) => Map k Term -> m (OrdMultiMap Term k)
+ordSplitClasses = invertOrdMapWith findTerm

@@ -10,6 +10,7 @@ module Heart.Prelude
   , Hashable (..)
   , HashMap
   , HashSet
+  , Identity (..)
   , Int64
   , IsString
   , Lens'
@@ -61,6 +62,7 @@ import Control.Lens.TH (makeLenses, makePrisms)
 import Control.Monad (foldM, unless, when)
 import Control.Monad.Catch (MonadThrow (..))
 import Control.Monad.Fail (MonadFail (..))
+import Control.Monad.Identity (Identity (..))
 import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.IO.Unlift (MonadUnliftIO (..), UnliftIO (..))
 import Control.Monad.Reader (MonadReader (..))

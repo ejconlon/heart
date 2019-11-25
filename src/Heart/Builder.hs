@@ -31,6 +31,10 @@ module Heart.Builder
   , newHashSetBuilder
   , runHashSetBuilder
   , evalHashSetBuilder
+  , OrdMultiMapBuilder
+  , newOrdMultiMapBuilder
+  , runOrdMultiMapBuilder
+  , evalOrdMultiMapBuilder
   , HashMultiMapBuilder
   , newHashMultiMapBuilder
   , runHashMultiMapBuilder
@@ -144,6 +148,17 @@ runHashSetBuilder h = newHashSetBuilder >>= flip rawRunBuilder h
 
 evalHashSetBuilder :: (MonadIO m, Eq k, Hashable k) => (HashSetBuilder k -> m ()) -> m (HashSet k)
 evalHashSetBuilder h = fmap fst (runHashSetBuilder h)
+
+type OrdMultiMapBuilder k v = Builder (k, v) (OrdMultiMap k v)
+
+newOrdMultiMapBuilder :: (MonadIO m, Ord k, Ord v) => m (OrdMultiMapBuilder k v)
+newOrdMultiMapBuilder = newBuilder (\m (k, v) -> insertOrdMultiMap k v m) Map.empty
+
+runOrdMultiMapBuilder :: (MonadIO m, Ord k, Ord v) => (OrdMultiMapBuilder k v -> m c) -> m (OrdMultiMap k v, c)
+runOrdMultiMapBuilder h = newOrdMultiMapBuilder >>= flip rawRunBuilder h
+
+evalOrdMultiMapBuilder :: (MonadIO m, Ord k, Ord v) => (OrdMultiMapBuilder k v -> m ()) -> m (OrdMultiMap k v)
+evalOrdMultiMapBuilder h = fmap fst (runOrdMultiMapBuilder h)
 
 type HashMultiMapBuilder k v = Builder (k, v) (HashMultiMap k v)
 
