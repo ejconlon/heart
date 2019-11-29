@@ -1,3 +1,17 @@
+.PHONY: cisetup
+cisetup:
+	stack setup
+
+.PHONY: citest
+citest: test
+
+.PHONY: cidocs
+cidocs: docs
+
+.PHONY: cicompress
+cicompress:
+	tar -cvzf /tmp/haddock.tar.gz -C $$(stack path --local-install-root) doc
+
 .PHONY: build
 build:
 	stack build
@@ -20,6 +34,10 @@ splices: buildsplices printsplices
 .PHONY: test
 test:
 	stack test
+
+.PHONY: docs
+docs:
+	stack haddock --no-haddock-deps
 
 .PHONY: deps
 deps:
